@@ -37,7 +37,7 @@
                 </tr>
             </thead>
             <transition-group name="slide-fade" tag="tbody">
-                <tr v-for="(product, index) in listProducts" :key="product.id">
+                <tr v-for="(product, index) in listProducts.data" :key="product.id">
                     <th scope="row">{{ product.id }}</th>
                     <td v-if="!product.isEdit">
                         {{ product.name }}
@@ -62,6 +62,34 @@
                 </tr>
             </transition-group>
         </table>
+        <div>
+            {{ listProducts.from }} - {{ listProducts.to }} of {{ listProducts.total }}
+        </div>
+        <ul class="pagination">
+            <li
+                class="page-item"
+                :class="{ 'disabled': listProducts.prev_page_url === null }"
+                @click="listProducts.prev_page_url && getListProducts(listProducts.current_page - 1)"
+            >
+                <a class="page-link" href="#">Previous</a>
+            </li>
+            <li class="page-item" v-if="listProducts.prev_page_url" @click="getListProducts(listProducts.current_page - 1)">
+                <a class="page-link" href="#">{{ listProducts.current_page - 1 }}</a>
+            </li>
+            <li class="page-item active">
+                <a class="page-link" href="#">{{ listProducts.current_page }}</a>
+            </li>
+            <li class="page-item" v-if="listProducts.next_page_url" @click="getListProducts(listProducts.current_page + 1)">
+                <a class="page-link" href="#">{{ listProducts.current_page + 1 }}</a>
+            </li>
+            <li
+                class="page-item"
+                :class="{ 'disabled': listProducts.next_page_url === null }"
+                @click="listProducts.next_page_url && getListProducts(listProducts.current_page + 1)"
+            >
+                <a class="page-link" href="#">Next</a>
+            </li>
+        </ul>
     </div>
 </template>
 
@@ -73,7 +101,7 @@
                     name: '',
                     price: 0
                 },
-                listProducts: [],
+                listProducts: {},
                 error: null,
                 selectedProduct: null
             }
@@ -89,7 +117,7 @@
                         name: this.product.name,
                         price: this.product.price
                     })
-                    this.listProducts.unshift({
+                    this.listProducts.data.unshift({
                         ...response.data.product,
                         isEdit: false
                     })
@@ -103,11 +131,11 @@
                     this.error = error.response.data
                 }
             },
-            async getListProducts() {
+            async getListProducts(page = 1) {
                 try {
-                    const response = await axios.get('/products')
+                    const response = await axios.get('/products?page=' + page)
                     this.listProducts = response.data
-                    this.listProducts.forEach(item => {
+                    this.listProducts.data.forEach(item => {
                         Vue.set(item, 'isEdit', false)
                     })
                 } catch (error) {
@@ -125,17 +153,17 @@
                         price: this.selectedProduct.price
                     })
                   
-                    this.listProducts[index].name = response.data.product.name
-                    this.listProducts[index].price = response.data.product.price
-                    this.listProducts[index].isEdit = false
+                    this.listProducts.data[index].name = response.data.product.name
+                    this.listProducts.data[index].price = response.data.product.price
+                    this.listProducts.data[index].isEdit = false
                 } catch (error) {
                     this.error = error.response.data
                 }
             },
             async deleteProduct(product, index) {
                 try {
-                    const response = await axios.delete('/products/' + product.id)
-                    this.listProducts.splice(index, 1)
+                    await axios.delete('/products/' + product.id)
+                    this.listProducts.data.splice(index, 1)
                 } catch (error) {
                     this.error = error.response.data
                 }

@@ -1937,6 +1937,34 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
@@ -1944,7 +1972,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         name: '',
         price: 0
       },
-      listProducts: [],
+      listProducts: {},
       error: null,
       selectedProduct: null
     };
@@ -1973,7 +2001,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               case 4:
                 response = _context.sent;
 
-                _this.listProducts.unshift(_objectSpread(_objectSpread({}, response.data.product), {}, {
+                _this.listProducts.data.unshift(_objectSpread(_objectSpread({}, response.data.product), {}, {
                   isEdit: false
                 })); // reset giá trị form về ban đầu
 
@@ -1999,40 +2027,42 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }))();
     },
     getListProducts: function getListProducts() {
-      var _this2 = this;
+      var _arguments = arguments,
+          _this2 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee2() {
-        var response;
+        var page, response;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
-                _context2.prev = 0;
-                _context2.next = 3;
-                return axios.get('/products');
+                page = _arguments.length > 0 && _arguments[0] !== undefined ? _arguments[0] : 1;
+                _context2.prev = 1;
+                _context2.next = 4;
+                return axios.get('/products?page=' + page);
 
-              case 3:
+              case 4:
                 response = _context2.sent;
                 _this2.listProducts = response.data;
 
-                _this2.listProducts.forEach(function (item) {
+                _this2.listProducts.data.forEach(function (item) {
                   Vue.set(item, 'isEdit', false);
                 });
 
-                _context2.next = 11;
+                _context2.next = 12;
                 break;
 
-              case 8:
-                _context2.prev = 8;
-                _context2.t0 = _context2["catch"](0);
+              case 9:
+                _context2.prev = 9;
+                _context2.t0 = _context2["catch"](1);
                 _this2.error = _context2.t0.response.data;
 
-              case 11:
+              case 12:
               case "end":
                 return _context2.stop();
             }
           }
-        }, _callee2, null, [[0, 8]]);
+        }, _callee2, null, [[1, 9]]);
       }))();
     },
     selecteProduct: function selecteProduct(product) {
@@ -2057,9 +2087,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
               case 3:
                 response = _context3.sent;
-                _this3.listProducts[index].name = response.data.product.name;
-                _this3.listProducts[index].price = response.data.product.price;
-                _this3.listProducts[index].isEdit = false;
+                _this3.listProducts.data[index].name = response.data.product.name;
+                _this3.listProducts.data[index].price = response.data.product.price;
+                _this3.listProducts.data[index].isEdit = false;
                 _context3.next = 12;
                 break;
 
@@ -2080,7 +2110,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       var _this4 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee4() {
-        var response;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee4$(_context4) {
           while (1) {
             switch (_context4.prev = _context4.next) {
@@ -2090,24 +2119,22 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 return axios["delete"]('/products/' + product.id);
 
               case 3:
-                response = _context4.sent;
+                _this4.listProducts.data.splice(index, 1);
 
-                _this4.listProducts.splice(index, 1);
-
-                _context4.next = 10;
+                _context4.next = 9;
                 break;
 
-              case 7:
-                _context4.prev = 7;
+              case 6:
+                _context4.prev = 6;
                 _context4.t0 = _context4["catch"](0);
                 _this4.error = _context4.t0.response.data;
 
-              case 10:
+              case 9:
               case "end":
                 return _context4.stop();
             }
           }
-        }, _callee4, null, [[0, 7]]);
+        }, _callee4, null, [[0, 6]]);
       }))();
     }
   }
@@ -39024,7 +39051,7 @@ var render = function() {
           _c(
             "transition-group",
             { attrs: { name: "slide-fade", tag: "tbody" } },
-            _vm._l(_vm.listProducts, function(product, index) {
+            _vm._l(_vm.listProducts.data, function(product, index) {
               return _c("tr", { key: product.id }, [
                 _c("th", { attrs: { scope: "row" } }, [
                   _vm._v(_vm._s(product.id))
@@ -39163,7 +39190,107 @@ var render = function() {
           )
         ],
         1
-      )
+      ),
+      _vm._v(" "),
+      _c("div", [
+        _vm._v(
+          "\n        " +
+            _vm._s(_vm.listProducts.from) +
+            " - " +
+            _vm._s(_vm.listProducts.to) +
+            " of " +
+            _vm._s(_vm.listProducts.total) +
+            "\n    "
+        )
+      ]),
+      _vm._v(" "),
+      _c("ul", { staticClass: "pagination" }, [
+        _c(
+          "li",
+          {
+            staticClass: "page-item",
+            class: { disabled: _vm.listProducts.prev_page_url === null },
+            on: {
+              click: function($event) {
+                _vm.listProducts.prev_page_url &&
+                  _vm.getListProducts(_vm.listProducts.current_page - 1)
+              }
+            }
+          },
+          [
+            _c("a", { staticClass: "page-link", attrs: { href: "#" } }, [
+              _vm._v("Previous")
+            ])
+          ]
+        ),
+        _vm._v(" "),
+        _vm.listProducts.prev_page_url
+          ? _c(
+              "li",
+              {
+                staticClass: "page-item",
+                on: {
+                  click: function($event) {
+                    return _vm.getListProducts(
+                      _vm.listProducts.current_page - 1
+                    )
+                  }
+                }
+              },
+              [
+                _c("a", { staticClass: "page-link", attrs: { href: "#" } }, [
+                  _vm._v(_vm._s(_vm.listProducts.current_page - 1))
+                ])
+              ]
+            )
+          : _vm._e(),
+        _vm._v(" "),
+        _c("li", { staticClass: "page-item active" }, [
+          _c("a", { staticClass: "page-link", attrs: { href: "#" } }, [
+            _vm._v(_vm._s(_vm.listProducts.current_page))
+          ])
+        ]),
+        _vm._v(" "),
+        _vm.listProducts.next_page_url
+          ? _c(
+              "li",
+              {
+                staticClass: "page-item",
+                on: {
+                  click: function($event) {
+                    return _vm.getListProducts(
+                      _vm.listProducts.current_page + 1
+                    )
+                  }
+                }
+              },
+              [
+                _c("a", { staticClass: "page-link", attrs: { href: "#" } }, [
+                  _vm._v(_vm._s(_vm.listProducts.current_page + 1))
+                ])
+              ]
+            )
+          : _vm._e(),
+        _vm._v(" "),
+        _c(
+          "li",
+          {
+            staticClass: "page-item",
+            class: { disabled: _vm.listProducts.next_page_url === null },
+            on: {
+              click: function($event) {
+                _vm.listProducts.next_page_url &&
+                  _vm.getListProducts(_vm.listProducts.current_page + 1)
+              }
+            }
+          },
+          [
+            _c("a", { staticClass: "page-link", attrs: { href: "#" } }, [
+              _vm._v("Next")
+            ])
+          ]
+        )
+      ])
     ],
     1
   )
